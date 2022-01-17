@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 function App() {
   return (
     <div className="w-screen h-screen bg-red-300">
@@ -7,40 +9,44 @@ function App() {
   );
 }
 
-const Square = (props: { value: string }) => {
-  function handleClick() {
-    console.log("Clicked " + props.value);
-  }
-
+const Square = (props: { value: string; onSquareClick: () => void }) => {
   return (
     <>
       <button
-        className="w-16 h-16  item-center bg-transparent hover:bg-blue-500 text-blue-700 font-bold hover:text-white border-2 border-blue-500  py-3 px-5 hover:border-transparent"
-        onClick={handleClick}
+        className="w-32 h-32 bg-transparent hover:bg-blue-500 text-blue-700 font-bold hover:text-white border-2 border-blue-500 px-3 py-5 hover:border-transparent"
+        onClick={props.onSquareClick}
       >
-        {props.value}
+        <span className="text-[60px] font-extrabold">{props.value}</span>
       </button>
     </>
   );
 };
 
 const Board = () => {
+  const [squares, setSquares] = useState(Array(9).fill(""));
+
+  const handleClick = (i: number) => {
+    const newSquares = [...squares];
+    newSquares[i] = "X";
+    setSquares(newSquares);
+  };
+
   return (
     <>
-      <div>
-        <Square value="1" />
-        <Square value="2" />
-        <Square value="3" />
+      <div className="flex items-center">
+        <Square value={squares[0]} onSquareClick={() => handleClick(0)} />
+        <Square value={squares[1]} onSquareClick={() => handleClick(1)} />
+        <Square value={squares[2]} onSquareClick={() => handleClick(2)} />
       </div>
-      <div>
-        <Square value="4" />
-        <Square value="5" />
-        <Square value="6" />
+      <div className="flex items-center">
+        <Square value={squares[3]} onSquareClick={() => handleClick(3)} />
+        <Square value={squares[4]} onSquareClick={() => handleClick(4)} />
+        <Square value={squares[5]} onSquareClick={() => handleClick(5)} />
       </div>
-      <div>
-        <Square value="7" />
-        <Square value="8" />
-        <Square value="9" />
+      <div className="flex items-center">
+        <Square value={squares[6]} onSquareClick={() => handleClick(6)} />
+        <Square value={squares[7]} onSquareClick={() => handleClick(7)} />
+        <Square value={squares[8]} onSquareClick={() => handleClick(8)} />
       </div>
     </>
   );
