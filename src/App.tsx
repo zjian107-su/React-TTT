@@ -23,12 +23,21 @@ const Square = (props: { value: string; onSquareClick: () => void }) => {
 };
 
 const Board = () => {
-  const [squares, setSquares] = useState(Array(9).fill(""));
+  const [xIsNext, setXIsNext] = useState(true); // order tracking
+  const [squares, setSquares] = useState(Array(9).fill("")); // board state
 
   const handleClick = (i: number) => {
-    const newSquares = [...squares];
-    newSquares[i] = "X";
-    setSquares(newSquares);
+    if (squares[i]) return; // so it doesn't overwrite existing squares
+
+    const nextSquares = [...squares];
+    if (xIsNext) {
+      nextSquares[i] = "X";
+    } else {
+      nextSquares[i] = "O";
+    }
+
+    setSquares(nextSquares);
+    setXIsNext(!xIsNext);
   };
 
   return (
