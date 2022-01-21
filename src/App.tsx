@@ -23,40 +23,12 @@ const Square = (props: { value: string; onSquareClick: () => void }) => {
 const Board = ({
   xIsNext,
   squares,
-  setXIsNext,
-  setSquares,
+  onPlay,
 }: {
   xIsNext: boolean;
   squares: string[];
-  setXIsNext: React.Dispatch<React.SetStateAction<boolean>>;
-  setSquares: React.Dispatch<React.SetStateAction<string[]>>;
+  onPlay: (squares: string[]) => void;
 }): ReactElement => {
-  // get the winner
-  const calculateWinner = (squares: string[]): string | null => {
-    const lines = [
-      [0, 1, 2],
-      [3, 4, 5],
-      [6, 7, 8],
-      [0, 3, 6],
-      [1, 4, 7],
-      [2, 5, 8],
-      [0, 4, 8],
-      [2, 4, 6],
-    ];
-
-    for (let i = 0; i < lines.length; i++) {
-      const [a, b, c] = lines[i];
-      if (
-        squares[a] &&
-        squares[a] === squares[b] &&
-        squares[a] === squares[c]
-      ) {
-        return squares[a];
-      }
-    }
-    return null;
-  };
-
   // handle click
   const handleClick = (i: number) => {
     if (squares[i] || calculateWinner(squares)) return; // so it doesn't overwrite existing squares
@@ -68,8 +40,7 @@ const Board = ({
       nextSquares[i] = "O";
     }
 
-    setSquares(nextSquares);
-    setXIsNext(!xIsNext);
+    onPlay(nextSquares);
   };
 
   return (
@@ -104,16 +75,38 @@ const Board = ({
 
 const Game = () => {
   const [xIsNext, setXIsNext] = useState(true); // order tracking
-  const [squares, setSquares] = useState(Array(9).fill("")); // board state
+  const [history, setHistory] = useState(Array(9).fill("")); // board state
+  const currentSquares = history[history.length - 1];
+
+  function handlePlay(nextSquares: string[]) {
+    setHistory([...history, nextSquares]);
+    setXIsNext(!xIsNext);
+  }
 
   return (
-    <Board
-      xIsNext={xIsNext}
-      squares={squares}
-      setXIsNext={setXIsNext}
-      setSquares={setSquares}
-    />
+    <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
   );
+};
+
+const calculateWinner = (squares: string[]): string | null => {
+  const lines = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6],
+  ];
+
+  for (let i = 0; i < lines.length; i++) {
+    const [a, b, c] = lines[i];
+    if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
+      return squares[a];
+    }
+  }
+  return null;
 };
 
 export default App;
