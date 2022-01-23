@@ -29,27 +29,25 @@ const Board = ({
   squares: string[];
   onPlay: (squares: string[]) => void;
 }): ReactElement => {
-
-  let status;
-  if (calculateWinner(squares)) {
-    status = `Winner is ${calculateWinner(squares)}`;
-  } else {
-    status = `Next player: ${xIsNext ? "X" : "O"}`;
-  }
-
   // handle click
   const handleClick = (i: number) => {
     if (squares[i] || calculateWinner(squares)) return; // so it doesn't overwrite existing squares
-
     const nextSquares = [...squares];
     if (xIsNext) {
       nextSquares[i] = "X";
     } else {
       nextSquares[i] = "O";
     }
-
     onPlay(nextSquares);
   };
+
+  const winner = calculateWinner(squares);
+  let status;
+  if (winner) {
+    status = "Winner: " + winner;
+  } else {
+    status = "Next player: " + (xIsNext ? "X" : "O");
+  }
 
   return (
     <div className="flex mt-16">
@@ -79,16 +77,47 @@ const Board = ({
 
 const Game = () => {
   const [xIsNext, setXIsNext] = useState(true); // order tracking
-  const [history, setHistory] = useState(Array(9).fill("")); // board state
-  const currentSquares = history[history.length - 1];
+  const [history, setHistory] = useState([Array(9).fill(null)]); // board state
+  const [currentMove, setCurrentMove] = useState(0); // current move [0, 1, 2, 3, 4, 5, 6, 7, 8 ] To track the current viewing step
+  const currentSquares = history[currentMove];
 
   function handlePlay(nextSquares: string[]) {
-    setHistory([...history, nextSquares]);
+    const nextHistory = [...history.slice(0, currentMove + 1), nextSquares];
+    setHistory(nextHistory);
+    setCurrentMove(nextHistory.length - 1);
     setXIsNext(!xIsNext);
   }
 
+  const jumpTo = (nextMove: number) => {
+    // TODO
+    setCurrentMove(nextMove);
+    setXIsNext(nextMove % 2 === 0);
+  };
+
+  const moves = history.map((squares, move) => {
+    let description;
+    if (move > 0) {
+      description = "Go to move #" + move;
+    } else {
+      description = "Go to game start";
+    }
+    return (
+      <li key={move}>
+        <button
+          className="w-64 mb-1 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          onClick={() => jumpTo(move)}
+        >
+          {description}
+        </button>
+      </li>
+    );
+  });
+
   return (
-    <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
+    <div>
+      <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
+      <ol className="list-decimal">{moves}</ol>
+    </div>
   );
 };
 
