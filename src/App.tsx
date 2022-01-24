@@ -76,22 +76,20 @@ const Board = ({
 };
 
 const Game = () => {
-  const [xIsNext, setXIsNext] = useState(true); // order tracking
   const [history, setHistory] = useState([Array(9).fill(null)]); // board state
   const [currentMove, setCurrentMove] = useState(0); // current move [0, 1, 2, 3, 4, 5, 6, 7, 8 ] To track the current viewing step
+  const xIsNext = currentMove % 2 === 0; // to track who's turn it is
   const currentSquares = history[currentMove];
 
   function handlePlay(nextSquares: string[]) {
     const nextHistory = [...history.slice(0, currentMove + 1), nextSquares];
     setHistory(nextHistory);
     setCurrentMove(nextHistory.length - 1);
-    setXIsNext(!xIsNext);
   }
 
   const jumpTo = (nextMove: number) => {
     // TODO
     setCurrentMove(nextMove);
-    setXIsNext(nextMove % 2 === 0);
   };
 
   const moves = history.map((squares, move) => {
