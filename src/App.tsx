@@ -3,7 +3,16 @@ import { useState, ReactElement } from "react";
 function App() {
   return (
     <div className="w-screen h-screen bg-red-300">
-      <h1 className="text-3xl font-bold underline">Daniel's Tic Tac Toe App</h1>
+      {/* <h1 className="text-3xl font-bold underline">Daniel's Tic Tac Toe App</h1> */}
+      <blockquote className="pt-6 mb-6 text-3xl font-semibold italic text-center ">
+        <span className="mr-2">✨ Daniel's</span>
+        <span className="before:block before:absolute before:-inset-1 before:-skew-y-3 before:bg-pink-500 relative inline-block">
+          <span className="relative text-white tracking-tight">
+            Tic Tac Toe
+          </span>
+        </span>
+        <span className="ml-2">App ✨</span>
+      </blockquote>
       <Game />
     </div>
   );
@@ -41,35 +50,41 @@ const Board = ({
     onPlay(nextSquares);
   };
 
-  const winner = calculateWinner(squares);
+  const winner = calculateWinner(squares)?.winner;
+  const winningSquares = calculateWinner(squares)?.line;
   let status;
+  let winningSqares;
   if (winner) {
     status = "Winner: " + winner;
+    winningSqares = winningSquares;
   } else {
     status = "Next player: " + (xIsNext ? "X" : "O");
   }
 
   return (
-    <div className="flex mt-16">
-      <div>
-        <div className="flex items-center">
-          <Square value={squares[0]} onSquareClick={() => handleClick(0)} />
-          <Square value={squares[1]} onSquareClick={() => handleClick(1)} />
-          <Square value={squares[2]} onSquareClick={() => handleClick(2)} />
-        </div>
-        <div className="flex items-center">
-          <Square value={squares[3]} onSquareClick={() => handleClick(3)} />
-          <Square value={squares[4]} onSquareClick={() => handleClick(4)} />
-          <Square value={squares[5]} onSquareClick={() => handleClick(5)} />
-        </div>
-        <div className="flex items-center">
-          <Square value={squares[6]} onSquareClick={() => handleClick(6)} />
-          <Square value={squares[7]} onSquareClick={() => handleClick(7)} />
-          <Square value={squares[8]} onSquareClick={() => handleClick(8)} />
-        </div>
+    <div className="flex flex-col">
+      <div className="ml ">
+        <h1 className="text-4xl font-bold text-gray-800">{status}</h1>
+        <h1 className="text-4xl font-bold text-gray-800">
+          The winning squares are: {winningSqares}
+        </h1>
       </div>
-      <div className="ml-16">
-        <h1>{status}</h1>
+      <div>
+        {Array(3)
+          .fill(null)
+          .map((_, i) => (
+            <div className="flex items-center" key={i}>
+              {Array(3)
+                .fill(null)
+                .map((_, j) => (
+                  <Square
+                    key={j}
+                    value={squares[i * 3 + j]}
+                    onSquareClick={() => handleClick(i * 3 + j)}
+                  />
+                ))}
+            </div>
+          ))}
       </div>
     </div>
   );
@@ -80,6 +95,7 @@ const Game = () => {
   const [currentMove, setCurrentMove] = useState(0); // current move [0, 1, 2, 3, 4, 5, 6, 7, 8 ] To track the current viewing step
   const xIsNext = currentMove % 2 === 0; // to track who's turn it is
   const currentSquares = history[currentMove];
+  const [isAscending, setIsAscending] = useState(true); // to track the order of the moves
 
   function handlePlay(nextSquares: string[]) {
     const nextHistory = [...history.slice(0, currentMove + 1), nextSquares];
@@ -88,17 +104,19 @@ const Game = () => {
   }
 
   const jumpTo = (nextMove: number) => {
-    // TODO
     setCurrentMove(nextMove);
   };
 
   const moves = history.map((squares, move) => {
     let description;
-    if (move > 0) {
-      description = "Go to move #" + move;
-    } else {
+    if (move === 0) {
       description = "Go to game start";
+    } else if (move === currentMove) {
+      description = `You are at move #${move}`;
+    } else {
+      description = "Go to move #" + move;
     }
+
     return (
       <li key={move}>
         <button
@@ -112,14 +130,28 @@ const Game = () => {
   });
 
   return (
-    <div>
+    <div className="flex mt-16 justify-around">
       <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
-      <ol className="list-decimal">{moves}</ol>
+      <div className="ml-16">
+        <div className="mb-16">
+          <button
+            className="w-64 mb-1 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            onClick={() => setIsAscending(!isAscending)}
+          >
+            {isAscending ? "Sort Descending" : "Sort Ascending"}
+          </button>
+        </div>
+        <ol className="list-decimal">
+          {isAscending ? moves : moves.reverse()}
+        </ol>
+      </div>
     </div>
   );
 };
 
-const calculateWinner = (squares: string[]): string | null => {
+const calculateWinner = (
+  squares: string[]
+): { winner: string; line: number[] } | null => {
   const lines = [
     [0, 1, 2],
     [3, 4, 5],
@@ -134,7 +166,7 @@ const calculateWinner = (squares: string[]): string | null => {
   for (let i = 0; i < lines.length; i++) {
     const [a, b, c] = lines[i];
     if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-      return squares[a];
+      return { winner: squares[a], line: [a, b, c] };
     }
   }
   return null;
