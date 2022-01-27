@@ -4,7 +4,7 @@ function App() {
   return (
     <div className="w-screen h-screen bg-red-300">
       {/* <h1 className="text-3xl font-bold underline">Daniel's Tic Tac Toe App</h1> */}
-      <blockquote className="pt-6 mb-6 text-3xl font-semibold italic text-center ">
+      <blockquote className="pt-6 mb-6 text-4xl font-semibold italic text-center ">
         <span className="mr-2">✨ Daniel's</span>
         <span className="before:block before:absolute before:-inset-1 before:-skew-y-3 before:bg-pink-500 relative inline-block">
           <span className="relative text-white tracking-tight">
@@ -123,7 +123,9 @@ const Game = () => {
     } else if (move === currentMove) {
       description = `You are at move #${move}`;
     } else {
-      description = "Go to move #" + move;
+      description = `Go to move #${move}:   (${Math.floor(move / 3) + 1}, ${
+        (move % 3) + 1
+      })`;
     }
 
     return (
@@ -141,10 +143,10 @@ const Game = () => {
   return (
     <div className="flex mt-16 justify-around">
       <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
-      <div className="ml-16">
-        <div className="mb-16">
+      <div className="ml-16 mt-16">
+        <div className="mb-8">
           <button
-            className="w-64 mb-1 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            className="w-64 mb-1 bg-orange-500 hover:bg-orange-700 text-white font-bold py- px-4 rounded"
             onClick={() => setIsAscending(!isAscending)}
           >
             {isAscending ? "Sort Descending" : "Sort Ascending"}
