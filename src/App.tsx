@@ -22,20 +22,20 @@ const Square = (props: {
   value: string;
   order: number;
   onSquareClick: () => void;
-  winningSquaresList: string[] | undefined;
+  winningSquaresList: number[] | undefined;
 }) => {
-  const isWinningSquare = props.winningSquaresList?.includes(
-    props.order.toString()
-  );
+  const isWinningSquare = props.winningSquaresList?.includes(props.order);
   const squareStyle = isWinningSquare ? "bg-green-500" : "";
 
   return (
-    <button
-      className={`w-32 h-32 bg-transparent hover:bg-blue-500 text-blue-700 font-bold hover:text-white border-2 border-blue-500 px-3 py-5 hover:border-transparent ${squareStyle}`}
-      onClick={props.onSquareClick}
-    >
-      <span className="text-[60px] font-extrabold">{props.value}</span>
-    </button>
+    <div bg-transparent>
+      <button
+        className={`${squareStyle} w-32 h-32  hover:bg-blue-500 text-blue-700 font-bold hover:text-white border-2 border-blue-500 px-3 py-5 hover:border-transparent `}
+        onClick={props.onSquareClick}
+      >
+        <span className="text-[60px] font-extrabold">{props.value}</span>
+      </button>
+    </div>
   );
 };
 
@@ -60,13 +60,15 @@ const Board = ({
     onPlay(nextSquares);
   };
 
-  const winner = calculateWinner(squares)?.winner;
-  const winningSquares = calculateWinner(squares)?.line;
+  const winnerInfo = calculateWinner(squares);
+  const winner = winnerInfo?.winner;
+  const winningSquares = winnerInfo?.line;
   let status: string | null;
-  let winningSquaresList: string[] | undefined;
+  let winningSquaresList: number[] | undefined;
   if (winner) {
     status = "Winner: " + winner;
-    winningSquaresList = winningSquares?.map((num) => num.toString());
+    // console.log(winningSquaresList);
+    winningSquaresList = winningSquares;
   } else {
     status = "Next player: " + (xIsNext ? "X" : "O");
   }
@@ -75,6 +77,9 @@ const Board = ({
     <div className="flex flex-col">
       <div className="ml ">
         <h1 className="text-4xl font-bold text-gray-800">{status}</h1>
+        <h1 className="text-4xl font-bold text-gray-800">
+          {winningSquaresList}
+        </h1>
       </div>
       <div>
         {Array(3)
