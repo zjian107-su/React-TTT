@@ -78,7 +78,7 @@ const Board = ({
       <div className="ml ">
         <h1 className="text-4xl font-bold text-gray-800">{status}</h1>
         <h1 className="text-4xl font-bold text-gray-800">
-          {winningSquaresList}
+          {`Tile order numbers ${winningSquaresList} are marked green`}
         </h1>
       </div>
       <div>
