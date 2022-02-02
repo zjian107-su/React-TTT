@@ -2,9 +2,9 @@ import { useState, ReactElement } from "react";
 
 function App() {
   return (
-    <div className="w-screen h-screen bg-red-300">
+    <div className="w-screen min-h-screen bg-red-300">
       {/* <h1 className="text-3xl font-bold underline">Daniel's Tic Tac Toe App</h1> */}
-      <blockquote className="pt-6 mb-6 text-4xl font-semibold italic text-center ">
+      <blockquote className="pt-6 mb-6 md:text-4xl text-xl font-semibold italic text-center">
         <span className="mr-2">✨ Daniel's</span>
         <span className="before:block before:absolute before:-inset-1 before:-skew-y-3 before:bg-pink-500 relative inline-block">
           <span className="relative text-white tracking-tight">
@@ -30,10 +30,12 @@ const Square = (props: {
   return (
     <div bg-transparent>
       <button
-        className={`${squareStyle} w-32 h-32  hover:bg-blue-500 text-blue-700 font-bold hover:text-white border-2 border-blue-500 px-3 py-5 hover:border-transparent `}
+        className={`${squareStyle} w-24 h-24 md:w-32 md:h-32 hover:bg-blue-500 text-blue-700 font-bold hover:text-white border-2 border-blue-500 px-3 py-5 hover:border-transparent `}
         onClick={props.onSquareClick}
       >
-        <span className="text-[60px] font-extrabold">{props.value}</span>
+        <span className="text-4xl lg:text-[60px] font-extrabold">
+          {props.value}
+        </span>
       </button>
     </div>
   );
@@ -75,30 +77,36 @@ const Board = ({
 
   return (
     <div className="flex flex-col">
-      <div className="ml ">
-        <h1 className="text-4xl font-bold text-gray-800">{status}</h1>
-        <h1 className="text-4xl font-bold text-gray-800">
+      <div className="ml-1">
+        <h1 className="text-xl md:text-2xl font-bold text-gray-800">
+          {status}
+        </h1>
+        <h1 className="text-xl md:text-2xl font-bold text-gray-800">
           {`Tile order numbers ${winningSquaresList} are marked green`}
         </h1>
       </div>
-      <div>
-        {Array(3)
-          .fill(null)
-          .map((_, i) => (
-            <div className="flex items-center" key={i}>
-              {Array(3)
-                .fill(null)
-                .map((_, j) => (
-                  <Square
-                    key={j}
-                    value={squares[i * 3 + j]}
-                    order={i * 3 + j}
-                    onSquareClick={() => handleClick(i * 3 + j)}
-                    winningSquaresList={winningSquaresList}
-                  />
-                ))}
-            </div>
-          ))}
+      <div className="mt-2 flex justify-center items-center border-amber-800">
+        <div></div>
+        <div className="border-amber-900">
+          {Array(3)
+            .fill(null)
+            .map((_, i) => (
+              <div className="flex items-center" key={i}>
+                {Array(3)
+                  .fill(null)
+                  .map((_, j) => (
+                    <Square
+                      key={j}
+                      value={squares[i * 3 + j]}
+                      order={i * 3 + j}
+                      onSquareClick={() => handleClick(i * 3 + j)}
+                      winningSquaresList={winningSquaresList}
+                    />
+                  ))}
+              </div>
+            ))}
+        </div>
+        <div></div>
       </div>
     </div>
   );
@@ -146,9 +154,9 @@ const Game = () => {
   });
 
   return (
-    <div className="flex mt-16 justify-around">
+    <div className="flex flex-col items-center sm:flex-row sm:items-start mt-16 justify-around mx-8">
       <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
-      <div className="ml-16 mt-16">
+      <div className="ml-4 sm:ml-16 mt-16">
         <div className="mb-8">
           <button
             className="w-64 mb-1 bg-orange-500 hover:bg-orange-700 text-white font-bold py- px-4 rounded"
