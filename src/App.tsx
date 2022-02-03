@@ -30,7 +30,7 @@ const Square = (props: {
   return (
     <div bg-transparent>
       <button
-        className={`${squareStyle} w-24 h-24 md:w-32 md:h-32 hover:bg-blue-500 text-blue-700 font-bold hover:text-white border-2 border-blue-500 px-3 py-5 hover:border-transparent `}
+        className={`${squareStyle} w-24 h-24 md:w-32 md:h-32 hover:bg-blue-500 text-blue-700 font-bold hover:text-white border-2 border-blue-500 px-3 py-5 hover:border-transparent transform transition-transform duration-300 hover:scale-105`}
         onClick={props.onSquareClick}
       >
         <span className="text-4xl lg:text-[60px] font-extrabold">
@@ -95,7 +95,7 @@ const Board = ({
           {`Tile order numbers ${winningSquaresList} are marked green`}
         </h1>
       </div>
-      <div className="mt-2 flex justify-center items-center border-amber-800">
+      <div className="mt-2 flex justify-center items-center ">
         <div></div>
         <div className="border-amber-900">
           {Array(3)
@@ -154,7 +154,7 @@ const Game = () => {
     return (
       <li key={move}>
         <button
-          className="w-64 mb-1 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          className="w-64 mb-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transform transition-transform duration-200 hover:-translate-y-1"
           onClick={() => jumpTo(move)}
         >
           {description}
@@ -166,10 +166,11 @@ const Game = () => {
   return (
     <div className="flex flex-col items-center sm:flex-row sm:items-start mt-16 justify-around mx-8">
       <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
-      <div className="ml-4 sm:ml-16 mt-16">
+      {/* <div className="ml-4 sm:ml-16 mt-16 "> */}
+      <div className="ml-4 sm:ml-16 mt-16 overflow-y-auto max-h-[50vh]">
         <div className="mb-8">
           <button
-            className="w-64 mb-1 bg-orange-500 hover:bg-orange-700 text-white font-bold py- px-4 rounded"
+            className="w-64 mb-1 bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded transform transition-transform duration-200 active:translate-y-1"
             onClick={() => setIsAscending(!isAscending)}
           >
             {isAscending ? "Sort Descending" : "Sort Ascending"}
