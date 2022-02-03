@@ -79,6 +79,16 @@ const Board = ({
     <div className="flex flex-col">
       <div className="ml-1">
         <h1 className="text-xl md:text-2xl font-bold text-gray-800">
+          <a
+            href="https://github.com/zjian107-su/React-TTT"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-500 hover:text-blue-800 hover:underline"
+          >
+            GitHub Repo
+          </a>
+        </h1>
+        <h1 className="text-xl md:text-2xl font-bold text-gray-800">
           {status}
         </h1>
         <h1 className="text-xl md:text-2xl font-bold text-gray-800">
